@@ -1,8 +1,17 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  color: white;
+  font-family: 'Cabin', sans-serif;
+  font-size: 20px;
+  background: rgba(134,174,204,1);
+  background: -moz-linear-gradient(left, rgba(134,174,204,1) 0%, rgba(45,96,130,1) 100%);
+  background: -webkit-gradient(left top, right top, color-stop(0%, rgba(134,174,204,1)), color-stop(100%, rgba(45,96,130,1)));
+  background: -webkit-linear-gradient(left, rgba(134,174,204,1) 0%, rgba(45,96,130,1) 100%);
+  background: -o-linear-gradient(left, rgba(134,174,204,1) 0%, rgba(45,96,130,1) 100%);
+  background: -ms-linear-gradient(left, rgba(134,174,204,1) 0%, rgba(45,96,130,1) 100%);
+  background: linear-gradient(to right, rgba(134,174,204,1) 0%, rgba(45,96,130,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#86aecc', endColorstr='#2d6082', GradientType=1 );
 }
 
-a {
-  color: #00B7FF;
+h1 {
+  font-weight: bold;
 }

@@ -4,34 +4,63 @@ $(document).ready(function() {
   initializeMyo();
 });
 
-let first;
-let second;
+let firstMyo;
+let secondMyo;
+let firstAccelerometerData;
+let secondAccelerometerData;
 
 function initializeMyo() {
   Myo.connect();
   Myo.on('connected', function() {
-    if (!first) {
-      first = this;
-      second = this;
+    if (!firstMyo) {
+      firstMyo = this;
     } else {
-      second = this;
+      // secondMyo = this;
     }
     this.streamEMG(true);
   });
-  let firstResults;
-  let secondResults;
+  let firstMyoResults = {};
+  let secondMyoResults = {};
   setTimeout(() => {
-    console.log(first);
-    console.log(second);
-    first.on('emg', function(data) {
-      firstResults = data;
+    console.log(firstMyo);
+    // console.log(secondMyo);
+
+    firstMyo.on('emg', function(data) {
+      firstMyoResults.emg = data;
     });
-    second.on('emg', function(data) {
-      secondResults = data;
+    firstMyo.on('gyroscope', function(data) {
+      firstMyoResults.gyro = data;
     });
+    firstMyo.on('orientation', function(data) {
+      firstMyoResults.orientation = data;
+    });
+    firstMyo.on('accelerometer', function(data) {
+      firstMyoResults.accelerometer = data;
+    });
+
+    // secondMyo.on('emg', function(data) {
+    //   secondMyoResults.emg = data;
+    // });
+    // secondMyo.on('gyroscope', function(data) {
+    //   secondMyoResults.gyro = data;
+    // });
+    // secondMyo.on('orientation', function(data) {
+    //   secondMyoResults.orientation = data;
+    // });
+    // secondMyo.on('accelerometer', function(data) {
+    //   secondMyoResults.accelerometer = data;
+    // });
+
     setInterval(() => {
-      console.log("First: ", firstResults);
-      console.log("Second: ", secondResults);
+      console.log("First: ", firstMyoResults);
+      console.log("Second: ", secondMyoResults);
     }, 3000);
+
+    setInterval(() => {
+      firstAccelerometerData = firstMyoResults.accelerometer;
+      secondAccelerometerData = secondMyoResults.accelerometer;
+    }, 250);
+
   }, 3000);
 }
+
