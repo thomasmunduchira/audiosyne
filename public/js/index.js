@@ -6,9 +6,6 @@ $(document).ready(function() {
 
 let firstMyo;
 let secondMyo;
-let firstAccelerometerData;
-let secondAccelerometerData;
-
 function initializeMyo() {
   Myo.connect();
   Myo.on('connected', function() {
@@ -22,6 +19,8 @@ function initializeMyo() {
   let firstMyoResults = {};
   let secondMyoResults = {};
   setTimeout(() => {
+    firstMyo.zeroOrientation();
+    // second.zeroOrientation();
     console.log(firstMyo);
     // console.log(secondMyo);
 
@@ -51,16 +50,32 @@ function initializeMyo() {
     //   secondMyoResults.accelerometer = data;
     // });
 
-    setInterval(() => {
-      console.log("First: ", firstMyoResults);
-      console.log("Second: ", secondMyoResults);
+    var inta = setInterval(() => {
+      // console.log("First: ", firstMyoResults);
+      // console.log("Second: ", secondMyoResults);
     }, 3000);
+    setInterval(() => {
+      clearInterval(inta);
+    }, 13000);
+
+    let good = true;
 
     setInterval(() => {
-      firstAccelerometerData = firstMyoResults.accelerometer;
-      secondAccelerometerData = secondMyoResults.accelerometer;
-    }, 250);
-
+      const orientation = firstMyoResults.orientation;
+      console.log(orientation);
+      const params = [orientation.x, orientation.y, orientation.z];
+      if (Math.abs(orientation.w - 1) > 0.1) {
+        good = false;
+      }
+      params.forEach(function(value)  {
+        if (Math.abs(value) > 0.1) {
+          good = false;
+        }
+      });
+      if (good) {
+        console.log("good");
+      }
+      good = true;
+    }, 2000);
   }, 3000);
 }
-
