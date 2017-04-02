@@ -2,7 +2,8 @@
 
 var GoogleAuth;
 let action = [];
-var answer = "";
+var answer = "is";
+const buffer = 0.2;
 
 var trainAPIRequest;
 var predictAPIRequest;
@@ -124,12 +125,22 @@ $(document).ready(function() {
 
       setInterval(() => {
         let firstOrientation = firstMyoResults.orientation;
-        let params = [firstOrientation.x, firstOrientation.y, firstOrientation.z];
-        if (Math.abs(firstOrientation.w - 1) > 0.2) {
+        let secondOrientation = secondMyoResults.orientation;
+        let firstParams = [firstOrientation.x, firstOrientation.y, firstOrientation.z];
+        let secondParams = [secondOrientation.x, secondOrientation.y, secondOrientation.z];
+        if (Math.abs(firstOrientation.w - 1) > buffer) {
           outside = true;
         }
-        params.forEach(function(value)  {
-          if (Math.abs(value) > 0.2) {
+        firstParams.forEach(function(value)  {
+          if (Math.abs(value) > buffer) {
+            outside = true;
+          }
+        });
+        if (Math.abs(secondOrientation.w - 1) > buffer) {
+          outside = true;
+        }
+        secondParams.forEach(function(value)  {
+          if (Math.abs(value) > buffer) {
             outside = true;
           }
         });
@@ -140,10 +151,13 @@ $(document).ready(function() {
           var ital = setInterval(() => {
             console.log("Recorded snapshot");
             firstOrientation = firstMyoResults.orientation;
-            let secondOrientation = secondMyoResults.orientation;
+            secondOrientation = secondMyoResults.orientation;
             let firstEmg = firstMyoResults.emg;
             let secondEmg = secondMyoResults.emg;
-            action.push(firstEmg[0], firstEmg[1], firstEmg[2], firstEmg[3], firstEmg[4], firstEmg[5], firstEmg[6], firstEmg[7], firstOrientation.w, firstOrientation.x, firstOrientation.y, firstOrientation.z, secondEmg[0], secondEmg[1], secondEmg[2], secondEmg[3], secondEmg[4], secondEmg[5], secondEmg[6], secondEmg[7], secondOrientation.w, secondOrientation.x, secondOrientation.y, secondOrientation.z);
+            action.push(...firstEmg);
+            action.push(...firstOrientation);
+            action.push(...secondEmg)
+            action.push(...secondOrientation);
           }, 250);
           setTimeout(() => {
             outside = false;
