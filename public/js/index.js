@@ -1,7 +1,7 @@
 'use strict';
 
 var GoogleAuth;
-var action = [];
+let action = [];
 var answer = "";
 
 var trainAPIRequest;
@@ -17,38 +17,20 @@ function initClient() {
     trainAPIRequest = gapi.client.request({
       'method': 'POST',
       'path': '/prediction/v1.6/projects/sign-language-speech/trainedmodels',
-      'params': {
+      'body': {
         id: "gestures",
         modelType: "CLASSIFICATION"
       }
     });
 
-    predictAPIRequest = gapi.client.request({
-      'method': 'POST',
-      'path': '/prediction/v1.6/projects/sign-language-speech/trainedmodels/gestures/predict',
-      'params': {
-        "input": {
-          "csvInstance": action
-        }
-      }
-    });
-
-    updateAPIRequest = gapi.client.request({
-      'method': 'PUT',
-      'path': '/prediction/v1.6/projects/sign-language-speech/trainedmodels/gestures',
-      'params': {
-        "output": answer,
-        "csvInstance": action
-      }
-    });
-
     GoogleAuth = gapi.auth2.getAuthInstance();
-    if (GoogleAuth.isSignedIn) {
-      trainSignIn(GoogleAuth.isSignedIn);
-    } else {
-      GoogleAuth.isSignedIn.listen(trainSignIn);
-      GoogleAuth.signIn();
-    }
+    
+    // if (GoogleAuth.isSignedIn) {
+    //   trainSignIn(GoogleAuth.isSignedIn);
+    // } else {
+    //   GoogleAuth.isSignedIn.listen(trainSignIn);
+    //   GoogleAuth.signIn();
+    // }
   });
 }
 
@@ -169,10 +151,39 @@ $(document).ready(function() {
             clearInterval(ital);
             console.log("End");
             console.log(action);
-            // GoogleAuth.isSignedIn.listen(updateSigninStatus, predictSignIn);
-            // GoogleAuth.isSignedIn.listen(updateSigninStatus, updateSignIn);
-            action = [];
-            console.log(GoogleAuth);
+
+            predictAPIRequest = gapi.client.request({
+              'method': 'POST',
+              'path': '/prediction/v1.6/projects/sign-language-speech/trainedmodels/gestures/predict',
+              'body': {
+                "input": {
+                  "csvInstance": action
+                }
+              }
+            });
+
+            updateAPIRequest = gapi.client.request({
+              'method': 'PUT',
+              'path': '/prediction/v1.6/projects/sign-language-speech/trainedmodels/gestures',
+              'body': {
+                "output": answer,
+                "csvInstance": action
+              }
+            });
+
+            if (GoogleAuth.isSignedIn) {
+              predictSignIn(GoogleAuth.isSignedIn);
+            } else {
+              GoogleAuth.isSignedIn.listen(predictSignIn);
+              GoogleAuth.signIn();
+            }
+            
+            // if (GoogleAuth.isSignedIn) {
+            //   updateSignIn(GoogleAuth.isSignedIn);
+            // } else {
+            //   GoogleAuth.isSignedIn.listen(updateSignIn);
+            //   GoogleAuth.signIn();
+            // }
           }, 2100);
         }
       }, 100);
