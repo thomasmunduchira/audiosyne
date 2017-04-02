@@ -50,32 +50,41 @@ function initializeMyo() {
     //   secondMyoResults.accelerometer = data;
     // });
 
-    var inta = setInterval(() => {
-      // console.log("First: ", firstMyoResults);
-      // console.log("Second: ", secondMyoResults);
-    }, 3000);
-    setInterval(() => {
-      clearInterval(inta);
-    }, 13000);
-
-    let good = true;
+    let outside = false;
+    let inSession = false;
+    let action = [];
 
     setInterval(() => {
-      const orientation = firstMyoResults.orientation;
-      console.log(orientation);
-      const params = [orientation.x, orientation.y, orientation.z];
-      if (Math.abs(orientation.w - 1) > 0.1) {
-        good = false;
+      let orientation = firstMyoResults.orientation;
+      let emg = firstMyoResults.emg;
+      let params = [orientation.x, orientation.y, orientation.z];
+      if (Math.abs(orientation.w - 1) > 0.2) {
+        outside = true;
       }
       params.forEach(function(value)  {
-        if (Math.abs(value) > 0.1) {
-          good = false;
+        if (Math.abs(value) > 0.2) {
+          outside = true;
         }
       });
-      if (good) {
-        console.log("good");
+      if (outside && !inSession) {
+        inSession = true;
+        action = [];
+        console.log("Start");
+        var ital = setInterval(() => {
+          console.log("Recorded snapshot");
+          orientation = firstMyoResults.orientation;
+          emg = firstMyoResults.emg;
+          action.push(emg[0], emg[1], emg[2], emg[3], emg[4], emg[5], emg[6], emg[7], orientation.w, orientation.x, orientation.y, orientation.z);
+        }, 250);
+        setTimeout(() => {
+          outside = false;
+          inSession = false;
+          clearInterval(ital);
+          console.log("End");
+          console.log(action);
+          action = [];
+        }, 2000);
       }
-      good = true;
-    }, 2000);
+    }, 100);
   }, 3000);
 }
