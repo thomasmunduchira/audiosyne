@@ -9,4 +9,13 @@ router.get('/', function(req, res) {
   });
 });
 
+router.get('/gesture', function(req, res) {
+  const data = req.data;
+  let phrase = "hahaaha";
+  res.json({
+    success: true,
+    phrase: phrase
+  });
+});
+
 module.exports = router;
