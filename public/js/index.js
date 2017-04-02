@@ -4,6 +4,7 @@ $(document).ready(function() {
   initializeMyo();
 });
 
+/******** Myo Armband ******/
 let firstMyo;
 let secondMyo;
 function initializeMyo() {
