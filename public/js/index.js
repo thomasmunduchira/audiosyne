@@ -5,6 +5,37 @@ let action = [];
 var answer = "is";
 const buffer = 0.2;
 
+<<<<<<< HEAD
+/******** Myo Armband ******/
+let firstMyo;
+let secondMyo;
+function initializeMyo() {
+  Myo.connect();
+  Myo.on('connected', function() {
+    if (!firstMyo) {
+      firstMyo = this;
+    } else {
+      // secondMyo = this;
+    }
+    this.streamEMG(true);
+  });
+  let firstMyoResults = {};
+  let secondMyoResults = {};
+  setTimeout(() => {
+    firstMyo.zeroOrientation();
+    // second.zeroOrientation();
+    console.log(firstMyo);
+    // console.log(secondMyo);
+
+    firstMyo.on('emg', function(data) {
+      firstMyoResults.emg = data;
+    });
+    firstMyo.on('gyroscope', function(data) {
+      firstMyoResults.gyro = data;
+    });
+    firstMyo.on('orientation', function(data) {
+      firstMyoResults.orientation = data;
+=======
 var trainAPIRequest;
 var predictAPIRequest;
 var updateAPIRequest;
@@ -22,6 +53,7 @@ function initClient() {
         id: "gestures",
         modelType: "CLASSIFICATION"
       }
+>>>>>>> 2e643eeed9d989bc7f65cc6e7735ee12140aa380
     });
 
     GoogleAuth = gapi.auth2.getAuthInstance();

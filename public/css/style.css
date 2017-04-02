@@ -1,5 +1,6 @@
 body {
   color: white;
+  text-align: center;
   font-family: 'Cabin', sans-serif;
   font-size: 20px;
   background: rgba(134,174,204,1);
@@ -15,3 +16,35 @@ body {
 h1 {
   font-weight: bold;
 }
+
+.name {
+  font-size: 3em;
+  text-shadow: 2px 2px 4px #000000;
+  padding: 10%;
+  margin-top: 10%;
+}
+
+.button {
+  display: inline-block;
+  padding: 15px 25px;
+  font-size: 24px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #888ea5;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+}
+
+.button:hover {background-color: #3e8e41}
+
+.button:active {
+  background-color: #9a7eb8;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+
