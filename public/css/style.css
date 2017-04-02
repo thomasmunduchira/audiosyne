@@ -2,7 +2,7 @@ body {
   color: white;
   text-align: center;
   font-family: 'Cabin', sans-serif;
-  font-size: 20px;
+  font-size: 25px;
   background: rgba(134,174,204,1);
   background: -moz-linear-gradient(left, rgba(134,174,204,1) 0%, rgba(45,96,130,1) 100%);
   background: -webkit-gradient(left top, right top, color-stop(0%, rgba(134,174,204,1)), color-stop(100%, rgba(45,96,130,1)));
@@ -14,22 +14,23 @@ body {
 }
 
 h1 {
+  font-size: 50px;
   font-weight: bold;
 }
 
-.name {
-  font-size: 3em;
-  text-shadow: 2px 2px 4px #000000;
-  padding: 10%;
-  margin-top: 10%;
+#container {
+  margin-top: 40vh;
+}
+
+#text {
+  margin-top: 60px;
+  margin-bottom: 70px;
 }
 
 .button {
-  display: inline-block;
   padding: 15px 25px;
   font-size: 24px;
   cursor: pointer;
-  text-align: center;
   text-decoration: none;
   outline: none;
   color: #fff;
@@ -39,7 +40,9 @@ h1 {
   box-shadow: 0 9px #999;
 }
 
-.button:hover {background-color: #3e8e41}
+.button:hover {
+  background-color: #3e8e41
+}
 
 .button:active {
   background-color: #9a7eb8;

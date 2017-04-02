@@ -2,40 +2,10 @@
 
 var GoogleAuth;
 let action = [];
-var answer = "is";
+var answer = "";
 const buffer = 0.2;
+var response;
 
-<<<<<<< HEAD
-/******** Myo Armband ******/
-let firstMyo;
-let secondMyo;
-function initializeMyo() {
-  Myo.connect();
-  Myo.on('connected', function() {
-    if (!firstMyo) {
-      firstMyo = this;
-    } else {
-      // secondMyo = this;
-    }
-    this.streamEMG(true);
-  });
-  let firstMyoResults = {};
-  let secondMyoResults = {};
-  setTimeout(() => {
-    firstMyo.zeroOrientation();
-    // second.zeroOrientation();
-    console.log(firstMyo);
-    // console.log(secondMyo);
-
-    firstMyo.on('emg', function(data) {
-      firstMyoResults.emg = data;
-    });
-    firstMyo.on('gyroscope', function(data) {
-      firstMyoResults.gyro = data;
-    });
-    firstMyo.on('orientation', function(data) {
-      firstMyoResults.orientation = data;
-=======
 var trainAPIRequest;
 var predictAPIRequest;
 var updateAPIRequest;
@@ -53,17 +23,16 @@ function initClient() {
         id: "gestures",
         modelType: "CLASSIFICATION"
       }
->>>>>>> 2e643eeed9d989bc7f65cc6e7735ee12140aa380
     });
 
     GoogleAuth = gapi.auth2.getAuthInstance();
-    
-    // if (GoogleAuth.isSignedIn) {
-    //   trainSignIn(GoogleAuth.isSignedIn);
-    // } else {
-    //   GoogleAuth.isSignedIn.listen(trainSignIn);
-    //   GoogleAuth.signIn();
-    // }
+
+    if (GoogleAuth.isSignedIn) {
+      trainSignIn(GoogleAuth.isSignedIn);
+    } else {
+      GoogleAuth.isSignedIn.listen(trainSignIn);
+      GoogleAuth.signIn();
+    }
   });
 }
 
@@ -71,8 +40,10 @@ var isAuthorized;
 
 function sendAuthorizedApiRequest(request) {
   if (isAuthorized) {
-    request.execute(function(response) {
-      console.log(response);
+    request.execute(function(responsed) {
+      response = responsed;
+      responsiveVoice.speak(responsed);
+      $('#text').innerHTML = responsed;
     });
   } else {
     GoogleAuth.signIn();
@@ -183,13 +154,10 @@ $(document).ready(function() {
           var ital = setInterval(() => {
             console.log("Recorded snapshot");
             firstOrientation = firstMyoResults.orientation;
-            secondOrientation = secondMyoResults.orientation;
+            let secondOrientation = secondMyoResults.orientation;
             let firstEmg = firstMyoResults.emg;
             let secondEmg = secondMyoResults.emg;
-            action.push(...firstEmg);
-            action.push(...firstOrientation);
-            action.push(...secondEmg)
-            action.push(...secondOrientation);
+            action.push(firstEmg[0], firstEmg[1], firstEmg[2], firstEmg[3], firstEmg[4], firstEmg[5], firstEmg[6], firstEmg[7], firstOrientation.w, firstOrientation.x, firstOrientation.y, firstOrientation.z, secondEmg[0], secondEmg[1], secondEmg[2], secondEmg[3], secondEmg[4], secondEmg[5], secondEmg[6], secondEmg[7], secondOrientation.w, secondOrientation.x, secondOrientation.y, secondOrientation.z);
           }, 250);
           setTimeout(() => {
             outside = false;
@@ -217,13 +185,13 @@ $(document).ready(function() {
               }
             });
 
-            if (GoogleAuth.isSignedIn) {
-              predictSignIn(GoogleAuth.isSignedIn);
-            } else {
-              GoogleAuth.isSignedIn.listen(predictSignIn);
-              GoogleAuth.signIn();
-            }
-            
+            // if (GoogleAuth.isSignedIn) {
+            //   predictSignIn(GoogleAuth.isSignedIn);
+            // } else {
+            //   GoogleAuth.isSignedIn.listen(predictSignIn);
+            //   GoogleAuth.signIn();
+            // }
+
             // if (GoogleAuth.isSignedIn) {
             //   updateSignIn(GoogleAuth.isSignedIn);
             // } else {
