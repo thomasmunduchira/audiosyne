@@ -2,24 +2,28 @@
 
 var GoogleAuth;
 var action = [];
+var answer = "";
+
+var trainAPIRequest;
+var predictAPIRequest;
+var updateAPIRequest;
 
 function initClient() {
   gapi.client.init({
-    'apiKey': 'KEY',
-    'clientId': 'CLIENT_ID',
+    'apiKey': 'jRPnU0LMkuC4g7fhk17QHoU_',
+    'clientId': '182388039064-fs0fglfvdgeeb5nnj93mui349rp100n6.apps.googleusercontent.com',
     'scope': 'https://www.googleapis.com/auth/prediction'
   }).then(function() {
-    GoogleAuth = gapi.auth2.getAuthInstance();
-    // var currentApiRequest = gapi.client.request({
-    //   'method': 'POST',
-    //   'path': '/prediction/v1.6/projects/sign-language-speech/trainedmodels',
-    //   'params': {
-    //     id: "gestures",
-    //     modelType: "CLASSIFICATION"
-    //   }
-    // });
+    trainAPIRequest = gapi.client.request({
+      'method': 'POST',
+      'path': '/prediction/v1.6/projects/sign-language-speech/trainedmodels',
+      'params': {
+        id: "gestures",
+        modelType: "CLASSIFICATION"
+      }
+    });
 
-    var currentApiRequest = gapi.client.request({
+    predictAPIRequest = gapi.client.request({
       'method': 'POST',
       'path': '/prediction/v1.6/projects/sign-language-speech/trainedmodels/gestures/predict',
       'params': {
@@ -29,34 +33,50 @@ function initClient() {
       }
     });
 
-    var answer = "";
+    updateAPIRequest = gapi.client.request({
+      'method': 'PUT',
+      'path': '/prediction/v1.6/projects/sign-language-speech/trainedmodels/gestures',
+      'params': {
+        "output": answer,
+        "csvInstance": action
+      }
+    });
 
-    // var currentApiRequest = gapi.client.request({
-    //   'method': 'PUT',
-    //   'path': '/prediction/v1.6/projects/sign-language-speech/trainedmodels/gestures',
-    //   'params': {
-    //     "output": answer,
-    //     "csvInstance": action
-    //   }
-    // });
+    GoogleAuth = gapi.auth2.getAuthInstance();
+    if (GoogleAuth.isSignedIn) {
+      trainSignIn(GoogleAuth.isSignedIn);
+    } else {
+      GoogleAuth.isSignedIn.listen(trainSignIn);
+      GoogleAuth.signIn();
+    }
   });
 }
 
 var isAuthorized;
 
-function sendAuthorizedApiRequest(requestDetails) {
-  currentApiRequest = requestDetails;
+function sendAuthorizedApiRequest(request) {
   if (isAuthorized) {
     request.execute(function(response) {
       console.log(response);
     });
-    currentApiRequest = {};
   } else {
     GoogleAuth.signIn();
   }
 }
 
-function updateSigninStatus(isSignedIn) {
+function trainSignIn(isSignedIn) {
+  updateSigninStatus(isSignedIn, trainAPIRequest);
+}
+
+function predictSignIn(isSignedIn) {
+  updateSigninStatus(isSignedIn, predictAPIRequest);
+}
+
+function updateSignIn(isSignedIn) {
+  updateSigninStatus(isSignedIn, updateAPIRequest);
+}
+
+function updateSigninStatus(isSignedIn, currentApiRequest) {
   if (isSignedIn) {
     isAuthorized = true;
     if (currentApiRequest) {
@@ -69,7 +89,7 @@ function updateSigninStatus(isSignedIn) {
 
 $(document).ready(function() {
   initializeMyo();
-  gapi.load('client', initClient);
+  gapi.load('client:auth2', initClient);
 
   let firstMyo;
   let secondMyo;
@@ -149,8 +169,10 @@ $(document).ready(function() {
             clearInterval(ital);
             console.log("End");
             console.log(action);
-            GoogleAuth.isSignedIn.listen(updateSigninStatus);
+            // GoogleAuth.isSignedIn.listen(updateSigninStatus, predictSignIn);
+            // GoogleAuth.isSignedIn.listen(updateSigninStatus, updateSignIn);
             action = [];
+            console.log(GoogleAuth);
           }, 2100);
         }
       }, 100);
