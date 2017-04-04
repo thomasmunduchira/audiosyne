@@ -2,8 +2,8 @@
 
 var GoogleAuth;
 let action = [];
-var answer = "";
-const buffer = 0.2;
+var answer = "hack";
+const buffer = 0.4;
 var response;
 
 var trainAPIRequest;
@@ -27,12 +27,12 @@ function initClient() {
 
     GoogleAuth = gapi.auth2.getAuthInstance();
 
-    if (GoogleAuth.isSignedIn) {
-      trainSignIn(GoogleAuth.isSignedIn);
-    } else {
-      GoogleAuth.isSignedIn.listen(trainSignIn);
-      GoogleAuth.signIn();
-    }
+    // if (GoogleAuth.isSignedIn) {
+    //   trainSignIn(GoogleAuth.isSignedIn);
+    // } else {
+    //   GoogleAuth.isSignedIn.listen(trainSignIn);
+    //   GoogleAuth.signIn();
+    // }
   });
 }
 
@@ -42,8 +42,9 @@ function sendAuthorizedApiRequest(request) {
   if (isAuthorized) {
     request.execute(function(responsed) {
       response = responsed;
-      responsiveVoice.speak(responsed);
-      $('#text').innerHTML = responsed;
+      console.log(responsed);
+      responsiveVoice.speak(responsed.outputLabel);
+      document.getElementById("text").innerHTML = responsed.outputLabel;
     });
   } else {
     GoogleAuth.signIn();
@@ -182,22 +183,17 @@ $(document).ready(function() {
               'body': {
                 "output": answer,
                 "csvInstance": action
+              },
+              'params': {
+                "id": "gestures",
+                "project": "sign-language-speech"
               }
             });
 
-            // if (GoogleAuth.isSignedIn) {
-            //   predictSignIn(GoogleAuth.isSignedIn);
-            // } else {
-            //   GoogleAuth.isSignedIn.listen(predictSignIn);
-            //   GoogleAuth.signIn();
-            // }
+            predictSignIn(GoogleAuth.isSignedIn);
 
-            // if (GoogleAuth.isSignedIn) {
-            //   updateSignIn(GoogleAuth.isSignedIn);
-            // } else {
-            //   GoogleAuth.isSignedIn.listen(updateSignIn);
-            //   GoogleAuth.signIn();
-            // }
+            // updateSignIn(GoogleAuth.isSignedIn);
+
           }, 2100);
         }
       }, 100);
